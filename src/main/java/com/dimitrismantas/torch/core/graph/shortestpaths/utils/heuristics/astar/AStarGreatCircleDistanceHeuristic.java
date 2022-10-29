@@ -29,8 +29,8 @@ import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedVerte
  * @version 1.0.0
  * @since 1.0.0
  */
-public final class GreatCircleDistanceHeuristic extends AbstractHeuristic {
-    public GreatCircleDistanceHeuristic(final DeserializedVertex refV) {
+public final class AStarGreatCircleDistanceHeuristic extends AbstractHeuristic {
+    public AStarGreatCircleDistanceHeuristic(final DeserializedVertex refV) {
         super(refV);
     }
 

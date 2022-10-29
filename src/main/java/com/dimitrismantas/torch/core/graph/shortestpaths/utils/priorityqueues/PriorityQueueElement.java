@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.dimitrismantas.torch.core.graph.shortestpaths.utils.priorityqueue;
+package com.dimitrismantas.torch.core.graph.shortestpaths.utils.priorityqueues;
 
 public final class PriorityQueueElement {
     private final int k;

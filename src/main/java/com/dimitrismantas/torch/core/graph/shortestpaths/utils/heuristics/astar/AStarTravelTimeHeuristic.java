@@ -28,7 +28,7 @@ import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedVerte
  * @version 1.0.0
  * @since 1.0.0
  */
-public final class TravelTimeHeuristic extends AbstractHeuristic {
+public final class AStarTravelTimeHeuristic extends AbstractHeuristic {
     /**
      * The inverse of the supposed minimum speed for which this heuristic is admissible in seconds per meter. The suitability of this value must be confirmed through testing.
      *
@@ -36,12 +36,12 @@ public final class TravelTimeHeuristic extends AbstractHeuristic {
      */
     // This value corresponds to 100 km/h (i.e., the Q3 + 1.5 * IQR of all edge speeds).
     private static final double INV_AVG_SPEED = 0.036;
-    private final GreatCircleDistanceHeuristic distanceHeuristic;
+    private final AStarGreatCircleDistanceHeuristic distanceHeuristic;
 
-    public TravelTimeHeuristic(final DeserializedVertex refV) {
+    public AStarTravelTimeHeuristic(final DeserializedVertex refV) {
         super(refV);
         // The reference latitude and longitude are read two times. This is inefficient.
-        this.distanceHeuristic = new GreatCircleDistanceHeuristic(refV);
+        this.distanceHeuristic = new AStarGreatCircleDistanceHeuristic(refV);
     }
 
     @Override

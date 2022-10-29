@@ -2,15 +2,23 @@
 
 package com.dimitrismantas.torch.core.utils.serialization.graph;
 
-import java.nio.*;
-import java.lang.*;
+import com.google.flatbuffers.BaseVector;
+import com.google.flatbuffers.Constants;
+import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.Table;
 
-import com.google.flatbuffers.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 @SuppressWarnings("unused")
 public final class DeserializedEdge extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_2_0_0(); }
-  public static DeserializedEdge getRootAsDeserializedEdge(ByteBuffer _bb) { return getRootAsDeserializedEdge(_bb, new DeserializedEdge()); }
+  public static void ValidateVersion() {
+    Constants.FLATBUFFERS_22_10_26();
+  }
+
+  public static DeserializedEdge getRootAsDeserializedEdge(ByteBuffer _bb) {
+    return getRootAsDeserializedEdge(_bb, new DeserializedEdge());
+  }
   public static DeserializedEdge getRootAsDeserializedEdge(ByteBuffer _bb, DeserializedEdge obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public DeserializedEdge __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
@@ -20,12 +28,12 @@ public final class DeserializedEdge extends Table {
   public short travelTime() { int o = __offset(8); return o != 0 ? bb.getShort(o + bb_pos) : 0; }
 
   public static int createDeserializedEdge(FlatBufferBuilder builder,
-      int end_vertex_label,
-      short length,
-      short travel_time) {
+                                           int endVertexLabel,
+                                           short length,
+                                           short travelTime) {
     builder.startTable(3);
-    DeserializedEdge.addEndVertexLabel(builder, end_vertex_label);
-    DeserializedEdge.addTravelTime(builder, travel_time);
+    DeserializedEdge.addEndVertexLabel(builder, endVertexLabel);
+    DeserializedEdge.addTravelTime(builder, travelTime);
     DeserializedEdge.addLength(builder, length);
     return DeserializedEdge.endDeserializedEdge(builder);
   }

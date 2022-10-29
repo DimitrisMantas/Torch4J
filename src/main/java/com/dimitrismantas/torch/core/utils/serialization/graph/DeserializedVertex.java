@@ -2,15 +2,23 @@
 
 package com.dimitrismantas.torch.core.utils.serialization.graph;
 
-import java.nio.*;
-import java.lang.*;
+import com.google.flatbuffers.BaseVector;
+import com.google.flatbuffers.Constants;
+import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.Table;
 
-import com.google.flatbuffers.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 @SuppressWarnings("unused")
 public final class DeserializedVertex extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_2_0_0(); }
-  public static DeserializedVertex getRootAsDeserializedVertex(ByteBuffer _bb) { return getRootAsDeserializedVertex(_bb, new DeserializedVertex()); }
+  public static void ValidateVersion() {
+    Constants.FLATBUFFERS_22_10_26();
+  }
+
+  public static DeserializedVertex getRootAsDeserializedVertex(ByteBuffer _bb) {
+    return getRootAsDeserializedVertex(_bb, new DeserializedVertex());
+  }
   public static DeserializedVertex getRootAsDeserializedVertex(ByteBuffer _bb, DeserializedVertex obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public DeserializedVertex __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
@@ -34,21 +42,21 @@ public final class DeserializedVertex extends Table {
   public DeserializedEdge.Vector outgoingEdgesVector(DeserializedEdge.Vector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createDeserializedVertex(FlatBufferBuilder builder,
-      int lbl,
-      float lat,
-      float lon,
-      short num_initialized,
-      int actual_cost_from_source,
-      int predecessor_label,
-      int outgoing_edgesOffset) {
+                                             int lbl,
+                                             float lat,
+                                             float lon,
+                                             short numInitialized,
+                                             int actualCostFromSource,
+                                             int predecessorLabel,
+                                             int outgoingEdgesOffset) {
     builder.startTable(7);
-    DeserializedVertex.addOutgoingEdges(builder, outgoing_edgesOffset);
-    DeserializedVertex.addPredecessorLabel(builder, predecessor_label);
-    DeserializedVertex.addActualCostFromSource(builder, actual_cost_from_source);
+    DeserializedVertex.addOutgoingEdges(builder, outgoingEdgesOffset);
+    DeserializedVertex.addPredecessorLabel(builder, predecessorLabel);
+    DeserializedVertex.addActualCostFromSource(builder, actualCostFromSource);
     DeserializedVertex.addLon(builder, lon);
     DeserializedVertex.addLat(builder, lat);
     DeserializedVertex.addLbl(builder, lbl);
-    DeserializedVertex.addNumInitialized(builder, num_initialized);
+    DeserializedVertex.addNumInitialized(builder, numInitialized);
     return DeserializedVertex.endDeserializedVertex(builder);
   }
 

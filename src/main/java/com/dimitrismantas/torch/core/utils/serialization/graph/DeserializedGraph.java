@@ -2,15 +2,23 @@
 
 package com.dimitrismantas.torch.core.utils.serialization.graph;
 
-import java.nio.*;
-import java.lang.*;
+import com.google.flatbuffers.BaseVector;
+import com.google.flatbuffers.Constants;
+import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.Table;
 
-import com.google.flatbuffers.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 @SuppressWarnings("unused")
 public final class DeserializedGraph extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_2_0_0(); }
-  public static DeserializedGraph getRootAsDeserializedGraph(ByteBuffer _bb) { return getRootAsDeserializedGraph(_bb, new DeserializedGraph()); }
+  public static void ValidateVersion() {
+    Constants.FLATBUFFERS_22_10_26();
+  }
+
+  public static DeserializedGraph getRootAsDeserializedGraph(ByteBuffer _bb) {
+    return getRootAsDeserializedGraph(_bb, new DeserializedGraph());
+  }
   public static DeserializedGraph getRootAsDeserializedGraph(ByteBuffer _bb, DeserializedGraph obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public DeserializedGraph __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
