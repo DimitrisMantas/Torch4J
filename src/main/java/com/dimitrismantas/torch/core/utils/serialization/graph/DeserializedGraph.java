@@ -19,15 +19,43 @@ public final class DeserializedGraph extends Table {
   public static DeserializedGraph getRootAsDeserializedGraph(ByteBuffer _bb) {
     return getRootAsDeserializedGraph(_bb, new DeserializedGraph());
   }
-  public static DeserializedGraph getRootAsDeserializedGraph(ByteBuffer _bb, DeserializedGraph obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
-  public DeserializedGraph __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public DeserializedVertex vertices(int j) { return vertices(new DeserializedVertex(), j); }
-  public DeserializedVertex vertices(DeserializedVertex obj, int j) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int verticesLength() { int o = __offset(4); return o != 0 ? __vector_len(o) : 0; }
-  public DeserializedVertex.Vector verticesVector() { return verticesVector(new DeserializedVertex.Vector()); }
-  public DeserializedVertex.Vector verticesVector(DeserializedVertex.Vector obj) { int o = __offset(4); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public static DeserializedGraph getRootAsDeserializedGraph(ByteBuffer _bb, DeserializedGraph obj) {
+    _bb.order(ByteOrder.LITTLE_ENDIAN);
+    return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb));
+  }
+
+  public void __init(int _i, ByteBuffer _bb) {
+    __reset(_i, _bb);
+  }
+
+  public DeserializedGraph __assign(int _i, ByteBuffer _bb) {
+    __init(_i, _bb);
+    return this;
+  }
+
+  public DeserializedVertex vertices(int j) {
+    return vertices(new DeserializedVertex(), j);
+  }
+
+  public DeserializedVertex vertices(DeserializedVertex obj, int j) {
+    int o = __offset(4);
+    return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null;
+  }
+
+  public int verticesLength() {
+    int o = __offset(4);
+    return o != 0 ? __vector_len(o) : 0;
+  }
+
+  public DeserializedVertex.Vector verticesVector() {
+    return verticesVector(new DeserializedVertex.Vector());
+  }
+
+  public DeserializedVertex.Vector verticesVector(DeserializedVertex.Vector obj) {
+    int o = __offset(4);
+    return o != 0 ? obj.__assign(__vector(o), 4, bb) : null;
+  }
 
   public static int createDeserializedGraph(FlatBufferBuilder builder,
       int verticesOffset) {

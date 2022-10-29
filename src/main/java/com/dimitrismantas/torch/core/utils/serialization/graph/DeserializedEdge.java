@@ -19,13 +19,35 @@ public final class DeserializedEdge extends Table {
   public static DeserializedEdge getRootAsDeserializedEdge(ByteBuffer _bb) {
     return getRootAsDeserializedEdge(_bb, new DeserializedEdge());
   }
-  public static DeserializedEdge getRootAsDeserializedEdge(ByteBuffer _bb, DeserializedEdge obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
-  public DeserializedEdge __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public int endVertexLabel() { int o = __offset(4); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public short length() { int o = __offset(6); return o != 0 ? bb.getShort(o + bb_pos) : 0; }
-  public short travelTime() { int o = __offset(8); return o != 0 ? bb.getShort(o + bb_pos) : 0; }
+  public static DeserializedEdge getRootAsDeserializedEdge(ByteBuffer _bb, DeserializedEdge obj) {
+    _bb.order(ByteOrder.LITTLE_ENDIAN);
+    return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb));
+  }
+
+  public void __init(int _i, ByteBuffer _bb) {
+    __reset(_i, _bb);
+  }
+
+  public DeserializedEdge __assign(int _i, ByteBuffer _bb) {
+    __init(_i, _bb);
+    return this;
+  }
+
+  public int endVertexLabel() {
+    int o = __offset(4);
+    return o != 0 ? bb.getInt(o + bb_pos) : 0;
+  }
+
+  public short length() {
+    int o = __offset(6);
+    return o != 0 ? bb.getShort(o + bb_pos) : 0;
+  }
+
+  public short travelTime() {
+    int o = __offset(8);
+    return o != 0 ? bb.getShort(o + bb_pos) : 0;
+  }
 
   public static int createDeserializedEdge(FlatBufferBuilder builder,
                                            int endVertexLabel,

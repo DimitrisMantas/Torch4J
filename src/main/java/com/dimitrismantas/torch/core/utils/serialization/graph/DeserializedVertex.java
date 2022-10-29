@@ -19,16 +19,65 @@ public final class DeserializedVertex extends Table {
   public static DeserializedVertex getRootAsDeserializedVertex(ByteBuffer _bb) {
     return getRootAsDeserializedVertex(_bb, new DeserializedVertex());
   }
-  public static DeserializedVertex getRootAsDeserializedVertex(ByteBuffer _bb, DeserializedVertex obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
-  public DeserializedVertex __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public int lbl() { int o = __offset(4); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public boolean mutateLbl(int lbl) { int o = __offset(4); if (o != 0) { bb.putInt(o + bb_pos, lbl); return true; } else { return false; } }
-  public float lat() { int o = __offset(6); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public boolean mutateLat(float lat) { int o = __offset(6); if (o != 0) { bb.putFloat(o + bb_pos, lat); return true; } else { return false; } }
-  public float lon() { int o = __offset(8); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public boolean mutateLon(float lon) { int o = __offset(8); if (o != 0) { bb.putFloat(o + bb_pos, lon); return true; } else { return false; } }
+  public static DeserializedVertex getRootAsDeserializedVertex(ByteBuffer _bb, DeserializedVertex obj) {
+    _bb.order(ByteOrder.LITTLE_ENDIAN);
+    return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb));
+  }
+
+  public void __init(int _i, ByteBuffer _bb) {
+    __reset(_i, _bb);
+  }
+
+  public DeserializedVertex __assign(int _i, ByteBuffer _bb) {
+    __init(_i, _bb);
+    return this;
+  }
+
+  public int lbl() {
+    int o = __offset(4);
+    return o != 0 ? bb.getInt(o + bb_pos) : 0;
+  }
+
+  public boolean mutateLbl(int lbl) {
+    int o = __offset(4);
+    if (o != 0) {
+      bb.putInt(o + bb_pos, lbl);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public float lat() {
+    int o = __offset(6);
+    return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f;
+  }
+
+  public boolean mutateLat(float lat) {
+    int o = __offset(6);
+    if (o != 0) {
+      bb.putFloat(o + bb_pos, lat);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public float lon() {
+    int o = __offset(8);
+    return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f;
+  }
+
+  public boolean mutateLon(float lon) {
+    int o = __offset(8);
+    if (o != 0) {
+      bb.putFloat(o + bb_pos, lon);
+      return true;
+    } else {
+      return false;
+    }
+  }
   public short numInitialized() { int o = __offset(10); return o != 0 ? bb.getShort(o + bb_pos) : 0; }
   public boolean mutateNumInitialized(short num_initialized) { int o = __offset(10); if (o != 0) { bb.putShort(o + bb_pos, num_initialized); return true; } else { return false; } }
   public int actualCostFromSource() { int o = __offset(12); return o != 0 ? bb.getInt(o + bb_pos) : 0; }

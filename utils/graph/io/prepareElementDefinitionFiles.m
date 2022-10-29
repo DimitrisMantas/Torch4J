@@ -11,7 +11,7 @@
 
 % The shape of the source edge dataset is 8,809,699 x 6.
 if ~(exist("edges", "var")) || ~ (isequal(size(edges), [8809699, 6]))
-    edges = importEdges("C:\Users\Dimit\IdeaProjects\Torch\utils\graph\grc_graph_edges_8809699.txt");
+    edges = importEdges("C:\Users\Dimit\IdeaProjects\Torch\utils\graph\source\grc_graph_edges_8809699_source.txt");
 end
 
 %% Calculate the travel time of each edge.
