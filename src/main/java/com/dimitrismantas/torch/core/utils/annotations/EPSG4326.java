@@ -25,5 +25,4 @@ import java.lang.annotation.Target;
 @Documented
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE})
 public @interface EPSG4326 {
-
 }

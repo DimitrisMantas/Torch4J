@@ -1,18 +1,18 @@
 package com.dimitrismantas.torch.core.utils.serialization.readers;
 
+import com.dimitrismantas.torch.core.graph.Graph;
+import com.dimitrismantas.torch.core.graph.Vertex;
 import com.dimitrismantas.torch.core.graph.shortestpaths.utils.exceptions.EqualEndpointException;
-import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedGraph;
-import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedVertex;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
-public final class SerializedGraphReader {
+public final class GraphReader {
     private MappedByteBuffer buffer;
 
-    public SerializedGraphReader(final String filename) {
+    public GraphReader(final String filename) {
         read(filename);
     }
 
@@ -24,7 +24,7 @@ public final class SerializedGraphReader {
      * @return {@code true} of the numbers are almost equal; {@code false} otherwise.
      * @see EqualEndpointException
      */
-    public static boolean equals(final DeserializedVertex a, final DeserializedVertex b) {
+    public static boolean equals(final Vertex a, final Vertex b) {
         return a == b || (a != null && a.lbl() == b.lbl());
     }
 
@@ -36,7 +36,7 @@ public final class SerializedGraphReader {
         }
     }
 
-    public DeserializedGraph getGraph() {
-        return DeserializedGraph.getRootAsDeserializedGraph(buffer);
+    public Graph getGraph() {
+        return Graph.getRootAsGraph(buffer);
     }
 }

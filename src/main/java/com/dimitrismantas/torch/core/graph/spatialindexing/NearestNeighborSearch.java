@@ -18,11 +18,11 @@
  */
 package com.dimitrismantas.torch.core.graph.spatialindexing;
 
-import com.dimitrismantas.torch.core.utils.annotations.O;
-import com.dimitrismantas.torch.core.utils.annotations.EPSG4326;
+import com.dimitrismantas.torch.core.graph.Graph;
+import com.dimitrismantas.torch.core.graph.Vertex;
 import com.dimitrismantas.torch.core.math.HaversineFormula;
-import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedGraph;
-import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedVertex;
+import com.dimitrismantas.torch.core.utils.annotations.EPSG4326;
+import com.dimitrismantas.torch.core.utils.annotations.O;
 
 /**
  * An implementation of a linear nearest neighbor search algorithm.
@@ -33,9 +33,9 @@ import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedVerte
  */
 @O("n")
 public final class NearestNeighborSearch {
-    private final DeserializedGraph graph;
+    private final Graph graph;
 
-    public NearestNeighborSearch(final DeserializedGraph graph) {
+    public NearestNeighborSearch(final Graph graph) {
         this.graph = graph;
     }
 
@@ -47,12 +47,12 @@ public final class NearestNeighborSearch {
      * @return The nearest neighbor to this point.
      */
     @EPSG4326
-    public DeserializedVertex run(final double lat, final double lon) {
+    public Vertex run(final double lat, final double lon) {
         // This is equivalent to setting match equal to null, since graph.vertices(-1) will throw a NullPointerException.
         int matchIndex = -1;
         double minDistance = Double.POSITIVE_INFINITY;
         for (int i = 0; i < graph.verticesLength(); i++) {
-            final DeserializedVertex matchCandidate = graph.vertices(i);
+            final Vertex matchCandidate = graph.vertices(i);
             final double currentDistance = HaversineFormula.run(lat, lon, matchCandidate.lat(), matchCandidate.lon());
             if (minDistance > currentDistance) {
                 minDistance = currentDistance;

@@ -18,8 +18,8 @@
  */
 package com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.astar;
 
+import com.dimitrismantas.torch.core.graph.Vertex;
 import com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.AbstractHeuristic;
-import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedVertex;
 
 /**
  * A heuristic that is used to estimate the travel time along the great circle to a reference vertex.
@@ -38,14 +38,17 @@ public final class AStarTravelTimeHeuristic extends AbstractHeuristic {
     private static final double INV_AVG_SPEED = 0.036;
     private final AStarGreatCircleDistanceHeuristic distanceHeuristic;
 
-    public AStarTravelTimeHeuristic(final DeserializedVertex refV) {
+    public AStarTravelTimeHeuristic(final Vertex refV) {
         super(refV);
         // The reference latitude and longitude are read two times. This is inefficient.
         this.distanceHeuristic = new AStarGreatCircleDistanceHeuristic(refV);
     }
 
     @Override
-    public int estimateCostToReferenceVertex(final DeserializedVertex v) {
-       return (int) (this.distanceHeuristic.estimateCostToReferenceVertex(v) * INV_AVG_SPEED);
+    public int estimateCostToReferenceVertex(final Vertex v, final short numExecutions) {
+        if (v.numInitialized() != numExecutions) {
+            v.mutateEstimatedCostToTarget((int) (this.distanceHeuristic.estimateCostToReferenceVertex(v, numExecutions) * INV_AVG_SPEED));
+        }
+        return v.estimatedCostToTarget();
     }
 }

@@ -18,15 +18,15 @@
  */
 package com.dimitrismantas.torch.core.graph.shortestpaths.utils.exceptions;
 
-import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedVertex;
-import com.dimitrismantas.torch.core.utils.serialization.readers.SerializedGraphReader;
+import com.dimitrismantas.torch.core.graph.Vertex;
+import com.dimitrismantas.torch.core.utils.serialization.readers.GraphReader;
 
 /**
  * An exception thrown in case the source and target vertices are equal.
  *
  * @author Dimitris Mantas
  * @version 1.0.0
- * @see SerializedGraphReader#equals(DeserializedVertex, DeserializedVertex)
+ * @see GraphReader#equals(Vertex, Vertex)
  * @see UnreachableTargetException
  * @since 1.0.0
  */

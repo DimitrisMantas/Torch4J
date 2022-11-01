@@ -1,5 +1,5 @@
-flatc --java DeserializedEdge.fbs
-flatc --java --gen-mutable DeserializedVertex.fbs
-flatc --java DeserializedGraph.fbs
+flatc --java Edge.fbs
+flatc --java --gen-mutable Vertex.fbs
+flatc --java Graph.fbs
 PAUSE
 EXIT

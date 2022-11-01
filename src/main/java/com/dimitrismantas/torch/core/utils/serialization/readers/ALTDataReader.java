@@ -1,6 +1,6 @@
 package com.dimitrismantas.torch.core.utils.serialization.readers;
 
-import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedVertex;
+import com.dimitrismantas.torch.core.graph.Vertex;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -15,7 +15,6 @@ public final class ALTDataReader {
     private int numLandmarks;
     private int numCostsPerVertex;
 
-
     public ALTDataReader(final String filename) {
         read(filename);
     }
@@ -24,7 +23,6 @@ public final class ALTDataReader {
         try (final RandomAccessFile f = new RandomAccessFile(filename, "rw"); final FileChannel fileChannel = f.getChannel()) {
             this.buffer = fileChannel.map(FileChannel.MapMode.PRIVATE, 0, fileChannel.size());
             this.buffer.order(ByteOrder.LITTLE_ENDIAN);
-
             this.numLandmarks = (int) this.buffer.getLong(0);
             this.numCostsPerVertex = 2 * this.numLandmarks;
         } catch (IOException e) {
@@ -32,7 +30,7 @@ public final class ALTDataReader {
         }
     }
 
-    public int[] getCosts(final DeserializedVertex v) {
+    public int[] getCosts(final Vertex v) {
         final int[] costs = new int[this.numCostsPerVertex];
         for (int i = 0; i < this.numCostsPerVertex; i++) {
             costs[i] = this.buffer.getInt(i * INT_SIZE_BYTES + v.lbl() * this.numCostsPerVertex * INT_SIZE_BYTES + this.numLandmarks * INT_SIZE_BYTES + LNG_SIZE_BYTES);
@@ -40,10 +38,9 @@ public final class ALTDataReader {
         return costs;
     }
 
-    public int getEstimatedCost(final DeserializedVertex v, final DeserializedVertex t) {
+    public int getEstimatedCost(final Vertex v, final Vertex t) {
         final int[] srcDists = getCosts(v);
         final int[] trgDists = getCosts(t);
-
         int minDist = 0;
         for (int i = 0; i < this.numCostsPerVertex; i++) {
             int lowerBoundDist = trgDists[i] - srcDists[i];
@@ -52,6 +49,5 @@ public final class ALTDataReader {
             }
         }
         return minDist;
-
     }
 }

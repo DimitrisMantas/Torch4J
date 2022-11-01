@@ -18,9 +18,9 @@
  */
 package com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.astar;
 
+import com.dimitrismantas.torch.core.graph.Vertex;
 import com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.AbstractHeuristic;
 import com.dimitrismantas.torch.core.math.HaversineFormula;
-import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedVertex;
 
 /**
  * A heuristic that is used to estimate the great circle distance to a reference vertex.
@@ -30,12 +30,15 @@ import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedVerte
  * @since 1.0.0
  */
 public final class AStarGreatCircleDistanceHeuristic extends AbstractHeuristic {
-    public AStarGreatCircleDistanceHeuristic(final DeserializedVertex refV) {
+    public AStarGreatCircleDistanceHeuristic(final Vertex refV) {
         super(refV);
     }
 
     @Override
-    public int estimateCostToReferenceVertex(final DeserializedVertex v) {
-        return (int) HaversineFormula.run(v.lat(), v.lon(), this.refV.lat(), this.refV.lon());
+    public int estimateCostToReferenceVertex(final Vertex v, final short numExecutions) {
+        if (v.numInitialized() != numExecutions) {
+            v.mutateEstimatedCostToTarget((int) HaversineFormula.run(v.lat(), v.lon(), this.refV.lat(), this.refV.lon()));
+        }
+        return v.estimatedCostToTarget();
     }
 }

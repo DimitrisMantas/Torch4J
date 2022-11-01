@@ -18,7 +18,7 @@
  */
 package com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics;
 
-import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedVertex;
+import com.dimitrismantas.torch.core.graph.Vertex;
 
 /**
  * A contract for a generic heuristic, which all heuristics must follow.
@@ -31,10 +31,13 @@ public abstract class AbstractHeuristic {
     /**
      * The vertex that is used as a reference when calculating the value of the heuristic corresponding to a given vertex.
      */
-    protected final DeserializedVertex refV;
+    protected Vertex refV;
 
-    public AbstractHeuristic(final DeserializedVertex refV) {
+    protected AbstractHeuristic(final Vertex refV) {
         this.refV = refV;
+    }
+
+    protected AbstractHeuristic() {
     }
 
     /**
@@ -43,5 +46,9 @@ public abstract class AbstractHeuristic {
      * @param v The v to be used during the calculation.
      * @return The value of the heuristic that corresponds to this v.
      */
-    public abstract int estimateCostToReferenceVertex(final DeserializedVertex v);
+    public abstract int estimateCostToReferenceVertex(final Vertex v, final short numExecutions);
+
+    public void setReferenceVertex(final Vertex refV) {
+        this.refV = refV;
+    }
 }

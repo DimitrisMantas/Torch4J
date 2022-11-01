@@ -16,40 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.dimitrismantas.torch.core.graph;
+package com.dimitrismantas.torch.serialization;
 
-import java.util.ArrayList;
-import java.util.List;
+public final class SerializableEdge {
+    private final int vLbl;
+    private final short length;
+    private final short travelTime;
 
-public final class Path {
-    private final List<Vertex> endpoints = new ArrayList<>();
-    private int length;
-    private int travelTime;
-
-    public Path() {
+    public SerializableEdge(final int vLbl, final short length, final short travelTime) {
+        this.vLbl = vLbl;
+        this.length = length;
+        this.travelTime = travelTime;
     }
 
-    public List<Vertex> getEndpoints() {
-        return endpoints;
+    public int getTailLabel() {
+        return this.vLbl;
     }
 
-    public void addEndpoint(final Vertex enpoint) {
-        this.endpoints.add(0, enpoint);
+    public short getLength() {
+        return this.length;
     }
 
-    public int getLength() {
-        return length;
-    }
-
-    public void incrementLength(final int length) {
-        this.length += length;
-    }
-
-    public int getTravelTime() {
-        return travelTime;
-    }
-
-    public void incrementTravelTime(final int travelTime) {
-        this.travelTime += travelTime;
+    public short getTravelTime() {
+        return this.travelTime;
     }
 }

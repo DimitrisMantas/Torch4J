@@ -18,61 +18,60 @@
  */
 package com.dimitrismantas.torch.core.graph.shortestpaths;
 
+import com.dimitrismantas.torch.core.graph.Edge;
+import com.dimitrismantas.torch.core.graph.Graph;
 import com.dimitrismantas.torch.core.graph.Path;
+import com.dimitrismantas.torch.core.graph.Vertex;
 import com.dimitrismantas.torch.core.graph.shortestpaths.utils.exceptions.EqualEndpointException;
 import com.dimitrismantas.torch.core.graph.shortestpaths.utils.exceptions.UnreachableTargetException;
-import com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.AbstractHeuristic;
 import com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.astar.alt.ALTHeuristic;
 import com.dimitrismantas.torch.core.graph.shortestpaths.utils.priorityqueues.PriorityQueueElement;
-import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedEdge;
-import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedGraph;
-import com.dimitrismantas.torch.core.utils.serialization.graph.DeserializedVertex;
 import com.dimitrismantas.torch.core.utils.serialization.readers.ALTDataReader;
-import com.dimitrismantas.torch.core.utils.serialization.readers.SerializedGraphReader;
+import com.dimitrismantas.torch.core.utils.serialization.readers.GraphReader;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public final class GenericShortestPathAlgorithm {
-    private final DeserializedGraph graph;
+    private final Graph graph;
     private final ALTDataReader reader1;
     private final ALTDataReader reader2;
-    private AbstractHeuristic heuristic;
+    // TODO
+    private final ALTHeuristic heuristic;
     private Path route;
     private PriorityQueue<PriorityQueueElement> priorityQueue;
     private short numExecutions;
 
-    public GenericShortestPathAlgorithm(final DeserializedGraph graph, final ALTDataReader reader1, final ALTDataReader reader2) {
+    public GenericShortestPathAlgorithm(final Graph graph, final ALTDataReader reader1, final ALTDataReader reader2) {
         this.graph = graph;
+        // TODO
         this.reader1 = reader1;
         this.reader2 = reader2;
+        this.heuristic = new ALTHeuristic();
     }
 
-
-    public Path run(final DeserializedVertex source, final DeserializedVertex target, final OptimizationMode OptimizationMode) {
+    public Path run(final Vertex source, final Vertex target, final OptimizationMode OptimizationMode) {
         invalidatePreviousExecution(target, OptimizationMode);
         // This can happen if the origin and destination are so close to each other that their nearest neighbors are equal.
-        if (SerializedGraphReader.equals(source, target)) {
+        if (GraphReader.equals(source, target)) {
             throw new EqualEndpointException("The source and target vertices are equal.");
         }
         // The correct value of the estimated cost to from the source vertex to the target is equal to the corresponding value of the appropriate heuristic. However, since the priority queue is initially empty, the source is guaranteed to be dequeued first.
-        initialize(source, -1, 0, 0);
-
+        initialize(source, -1, 0, heuristic.estimateCostToReferenceVertex(source, numExecutions));
         while (!priorityQueue.isEmpty()) {
             final PriorityQueueElement entry = priorityQueue.poll();
-            final DeserializedVertex curr = graph.vertices(entry.getValue());
+            final Vertex curr = graph.vertices(entry.getValue());
             // Since there might be two "copies" of the current vertex in the priority queue, we must be able to differentiate between them so that we use the correct one (i.e., the one with the minimum key).
-            if (entry.getKey() > curr.actualCostFromSource() + heuristic.estimateCostToReferenceVertex(curr)) {
+            if (entry.getKey() > curr.actualCostFromSource() + heuristic.estimateCostToReferenceVertex(curr, numExecutions)) {
                 continue;
             }
-
-            if (SerializedGraphReader.equals(curr, target)) {
+            if (GraphReader.equals(curr, target)) {
                 populatePath(source, curr);
                 break;
             }
             for (int i = 0; i < curr.outgoingEdgesLength(); i++) {
-                final DeserializedEdge outEdge = curr.outgoingEdges(i);
-                final DeserializedVertex adj = graph.vertices(outEdge.endVertexLabel());
+                final Edge outEdge = curr.outgoingEdges(i);
+                final Vertex adj = graph.vertices(outEdge.endVertexLabel());
                 int costFromSource = curr.actualCostFromSource();
                 switch (OptimizationMode) {
                     case MINIMIZE_DISTANCE:
@@ -82,7 +81,7 @@ public final class GenericShortestPathAlgorithm {
                         costFromSource += outEdge.travelTime();
                         break;
                 }
-                final int costToTarget = heuristic.estimateCostToReferenceVertex(adj);
+                final int costToTarget = heuristic.estimateCostToReferenceVertex(adj, numExecutions);
                 if (adj.numInitialized() == numExecutions) {
                     relax(curr, adj, costFromSource, costToTarget);
                 } else {
@@ -96,22 +95,21 @@ public final class GenericShortestPathAlgorithm {
         return route;
     }
 
-    private void invalidatePreviousExecution(final DeserializedVertex target, final OptimizationMode optMode) {
-        heuristic = getHeuristic(target, optMode);
+    private void invalidatePreviousExecution(final Vertex target, final OptimizationMode optMode) {
+        updateHeuristic(target, optMode);
         route = new Path();
         priorityQueue = new PriorityQueue<>(Comparator.comparingInt(PriorityQueueElement::getKey));
         numExecutions++;
     }
 
-    private void initialize(final DeserializedVertex vertex, final int predecessorLabel, final int costFromSource, final int costToTarget) {
+    private void initialize(final Vertex vertex, final int predecessorLabel, final int costFromSource, final int costToTarget) {
         vertex.mutateActualCostFromSource(costFromSource);
         vertex.mutateNumInitialized(numExecutions);
         vertex.mutatePredecessorLabel(predecessorLabel);
         priorityQueue.add(new PriorityQueueElement(costFromSource + costToTarget, vertex.lbl()));
-
     }
 
-    private void relax(final DeserializedVertex vertex, final DeserializedVertex adjacent, final int costFromSource, final int costToTarget) {
+    private void relax(final Vertex vertex, final Vertex adjacent, final int costFromSource, final int costToTarget) {
         if (costFromSource < adjacent.actualCostFromSource()) {
             adjacent.mutateActualCostFromSource(costFromSource);
             adjacent.mutatePredecessorLabel(vertex.lbl());
@@ -120,7 +118,7 @@ public final class GenericShortestPathAlgorithm {
         }
     }
 
-    private void populatePath(final DeserializedVertex source, DeserializedVertex current) {
+    private void populatePath(final Vertex source, Vertex current) {
         while (current.predecessorLabel() != -1) {
             route.addEndpoint(current);
             current = graph.vertices(current.predecessorLabel());
@@ -129,9 +127,9 @@ public final class GenericShortestPathAlgorithm {
         route.addEndpoint(source);
         // Using each endpoint, increment the route length and travel time accordingly.
         for (int i = 0; i < route.getEndpoints().size() - 1; i++) {
-            final DeserializedVertex endpoint = graph.vertices(route.getEndpoints().get(i).lbl());
+            final Vertex endpoint = graph.vertices(route.getEndpoints().get(i).lbl());
             for (int j = 0; j < endpoint.outgoingEdgesLength(); j++) {
-                final DeserializedEdge outEdge = endpoint.outgoingEdges(j);
+                final Edge outEdge = endpoint.outgoingEdges(j);
                 if (outEdge.endVertexLabel() == route.getEndpoints().get(i + 1).lbl()) {
                     route.incrementLength(outEdge.length());
                     route.incrementTravelTime(outEdge.travelTime());
@@ -141,14 +139,18 @@ public final class GenericShortestPathAlgorithm {
         }
     }
 
-    private AbstractHeuristic getHeuristic(final DeserializedVertex target, final OptimizationMode optMode) {
+    // TODO
+    private void updateHeuristic(final Vertex target, final OptimizationMode optMode) {
+        this.heuristic.setReferenceVertex(target);
         switch (optMode) {
             case MINIMIZE_DISTANCE:
-                return new ALTHeuristic(reader1, target);
+                this.heuristic.setReader(reader1);
+                break;
             case MINIMIZE_TRAVEL_TIME:
-                return new ALTHeuristic(reader2, target);
+                this.heuristic.setReader(reader2);
+                break;
             default:
-                return null;
+                throw new IllegalArgumentException(String.format("Failed to recognize optimization mode: %s", optMode));
         }
     }
 }
