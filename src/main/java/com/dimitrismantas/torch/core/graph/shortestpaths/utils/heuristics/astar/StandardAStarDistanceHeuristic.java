@@ -13,28 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.astar.alt;
+package com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.astar;
 
 import com.dimitrismantas.torch.core.graph.Vertex;
 import com.dimitrismantas.torch.core.graph.shortestpaths.GenericLabelSettingShortestPathAlgorithm;
 import com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.AbstractHeuristic;
-import com.dimitrismantas.torch.core.utils.serialization.readers.ALTDataReader;
+import com.dimitrismantas.torch.core.math.HaversineFormula;
 
-public final class ALTHeuristic extends AbstractHeuristic {
-    private ALTDataReader reader;
-
-    public ALTHeuristic(final GenericLabelSettingShortestPathAlgorithm genericAlgorithm) {
+public final class StandardAStarDistanceHeuristic extends AbstractHeuristic {
+    public StandardAStarDistanceHeuristic(final GenericLabelSettingShortestPathAlgorithm genericAlgorithm) {
         super(genericAlgorithm);
     }
 
+    @Override
     public int estimateCostToReferenceVertex(final Vertex v) {
         if (v.numInitialized() != this.genericAlgorithm.numExecutions) {
-            v.mutateEstimatedCostToTarget(this.reader.getEstimatedCost(v, this.refV));
+            v.mutateEstimatedCostToTarget((int) HaversineFormula.run(v.lat(), v.lon(), this.refV.lat(), this.refV.lon()));
         }
         return v.estimatedCostToTarget();
-    }
-
-    public void setReader(final ALTDataReader reader) {
-        this.reader = reader;
     }
 }

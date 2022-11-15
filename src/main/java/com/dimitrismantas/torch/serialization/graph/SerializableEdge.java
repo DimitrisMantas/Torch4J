@@ -13,8 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dimitrismantas.torch.core.graph.shortestpaths;
+package com.dimitrismantas.torch.serialization.graph;
 
-public enum OptimizationMode {
-    MINIMUM_DISTANCE, MINIMUM_TRAVEL_TIME
+public final class SerializableEdge {
+    private final int vLbl;
+    private final short length;
+    private final short travelTime;
+
+    public SerializableEdge(final int vLbl, final short length, final short travelTime) {
+        this.vLbl = vLbl;
+        this.length = length;
+        this.travelTime = travelTime;
+    }
+
+    public int getTailLabel() {
+        return this.vLbl;
+    }
+
+    public short getLength() {
+        return this.length;
+    }
+
+    public short getTravelTime() {
+        return this.travelTime;
+    }
 }

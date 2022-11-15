@@ -15,6 +15,6 @@
  */
 package com.dimitrismantas.torch.core.graph.shortestpaths;
 
-public enum OptimizationMode {
-    MINIMUM_DISTANCE, MINIMUM_TRAVEL_TIME
+public enum LabelSettingShortestPathAlgorithm {
+    DIJKSTRA, STANDARD_A_STAR, ALT
 }

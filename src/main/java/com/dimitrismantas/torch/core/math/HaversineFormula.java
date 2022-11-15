@@ -1,43 +1,56 @@
 /*
- * Torch is a model, open-source Android application for optimal routing
- * in offline mobile devices.
- * Copyright (C) 2021-2022  DIMITRIS(.)MANTAS(@outlook.com)
+ * Copyright 2021-2022 Dimitris Mantas
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.dimitrismantas.torch.core.math;
 
+import com.dimitrismantas.torch.core.utils.annotations.EPSG4326;
+
+/**
+ * A naive implementation of the <a href="https://en.wikipedia.org/wiki/Haversine_formula">Haversine formula</a> using standard methods provided by the built-in {@link Math} module.
+ *
+ * @author Dimitris Mantas
+ * @version 1.1.0
+ * @see SupplementalMath
+ * @since 1.0.0
+ */
+@EPSG4326
 public final class HaversineFormula {
-    private static final double R = 6371008.771415059454739D;
+    private static final double MEAN_EARTH_RADIUS = 6371008.7714150598325213;
 
     private HaversineFormula() {
     }
 
+    /**
+     * Computes the great-circle distance between two  points on a sphere. This method can estimate the smallest possible distance between any pair of points of the surface of the Earth with a maximum error of 5% when compared to <a href="https://en.wikipedia.org/wiki/Vincenty%27s_formulae">Vincenty's formulae</a>.
+     *
+     * @param lat1 the latitude of the first point in decimal degrees
+     * @param lon1 the longitude of the first point in decimal degrees
+     * @param lat2 the latitude of the second point in decimal degrees
+     * @param lon2 the longitude of the second point in decimal degrees
+     * @return an estimate of the smallest possible distance from the first to the second point along the surface of the Earth in meters
+     * @apiNote the order of the points does not influence the return value
+     * @implNote non-critical checks have been omitted for performance reasons; it is for this reason that this method may not return exactly {@code 0.0} when the first and second points are equal, but a positive real value close to it
+     * @see SupplementalMath#hav(double)
+     * @see SupplementalMath#ahav(double)
+     */
     public static double run(final double lat1, final double lon1, final double lat2, final double lon2) {
-//        // The points are the same since their coordinates are the same.
-//        if (SupplementalMath.almostEquals(lat1, lat2) && SupplementalMath.almostEquals(lon1, lon2)) {
-//            return 0.0D;
-//        }
-//        // The points are the same since one of them has been placed at the location of the other after one full rotation around the Earth.
-//        if ((SupplementalMath.almostEquals(lat1, lat2) && SupplementalMath.almostEquals(Math.abs(lon1 - lon2), 360.0D)) || SupplementalMath.almostEquals(Math.abs(lat1 - lat2), 360.0D) && SupplementalMath.almostEquals(lon1, lon2)) {
-//            return 0.0D;
-//        }
         final double dLat = Math.toRadians(lat1 - lat2);
         final double sLat = Math.toRadians(lat1 + lat2);
         final double dLon = Math.toRadians(lon1 - lon2);
-        final double angularDistance = SupplementalMath.hav(dLat) + (1.0D - SupplementalMath.hav(dLat) - SupplementalMath.hav(sLat)) * SupplementalMath.hav(dLon);
-        final double constrainedAngularDistance = Math.min(Math.max(angularDistance, 0.0D), 1.0D);
-        return R * SupplementalMath.ahav(constrainedAngularDistance);
+        final double angDist = SupplementalMath.hav(dLat) + (1.0D - SupplementalMath.hav(dLat) - SupplementalMath.hav(sLat)) * SupplementalMath.hav(dLon);
+        final double constrainedAngularDistance = Math.min(Math.max(angDist, 0), 1);
+        return MEAN_EARTH_RADIUS * SupplementalMath.ahav(constrainedAngularDistance);
     }
 }

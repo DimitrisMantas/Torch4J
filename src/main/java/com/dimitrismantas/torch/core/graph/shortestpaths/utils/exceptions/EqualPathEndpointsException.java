@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.dijkstra;
+package com.dimitrismantas.torch.core.graph.shortestpaths.utils.exceptions;
 
 import com.dimitrismantas.torch.core.graph.Vertex;
-import com.dimitrismantas.torch.core.graph.shortestpaths.GenericLabelSettingShortestPathAlgorithm;
-import com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.AbstractHeuristic;
+import com.dimitrismantas.torch.core.utils.serialization.readers.GraphReader;
 
-public class DijkstraHeuristic extends AbstractHeuristic {
-    public DijkstraHeuristic(GenericLabelSettingShortestPathAlgorithm genericAlgorithm) {
-        super(genericAlgorithm);
-    }
-
-    @Override
-    public int estimateCostToReferenceVertex(final Vertex v) {
-        return 0;
+/**
+ * An exception thrown in case a routing request is made from a given vertex to itself or, generally, when the corresponding route endpoints are equal.
+ *
+ * @author Dimitris Mantas
+ * @version 1.0.0
+ * @see GraphReader#equals(Vertex, Vertex)
+ * @see UnreachablePathTargetException
+ * @since 1.0.0
+ */
+public final class EqualPathEndpointsException extends IllegalArgumentException {
+    public EqualPathEndpointsException(final String message) {
+        super(message);
     }
 }

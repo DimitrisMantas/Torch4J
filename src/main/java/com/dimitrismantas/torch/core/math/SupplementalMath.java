@@ -1,99 +1,97 @@
 /*
- * Torch is a model, open-source Android application for optimal routing
- * in offline mobile devices.
- * Copyright (C) 2021-2022  DIMITRIS(.)MANTAS(@outlook.com)
+ * Copyright 2021-2022 Dimitris Mantas
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.dimitrismantas.torch.core.math;
 
 /**
- * A collection of supplemental mathematical operations used by Torch that are not directly supported by the standard {@link Math} package.
+ * A naive implementation of various mathematical functions using standard methods provided by the built-in {@link Math} module.
  *
  * @author Dimitris Mantas
- * @version 1.0.0
+ * @version 1.1.0
+ * @see HaversineFormula
  * @since 1.0.0
  */
 public final class SupplementalMath {
-    /**
-     * The inverse value of the common logarithm of the number two.
-     */
-    private static final double INV_LOG2 = 1.4426950408889633870046509400709D;
+    private static final double INV_LOG2 = 1.4426950408889634;
 
-    // This class is static.
     private SupplementalMath() {
     }
 
     /**
-     * Computes the haversine of a given angle.
+     * Computes the <a href="https://en.wikipedia.org/wiki/Versine#Haversine">haversine</a> of an angle.
      *
-     * @param theta The angle in radians.
-     * @return The haversine of the angle.
+     * @param theta the angle in radians
+     * @return the haversine of that angle
+     * @see #ahav(double)
      */
     public static double hav(final double theta) {
         return pow2(Math.sin(0.5D * theta));
     }
 
     /**
-     * Computes the inverse haversine of a given angle.
+     * Computes the inverse <a href="https://en.wikipedia.org/wiki/Versine#Haversine">haversine</a> of an angle.
      *
-     * @param theta The angle in radians.
-     * @return The haversine of the angle.
+     * @param theta the angle in radians
+     * @return the inverse haversine of that angle
+     * @see #hav(double)
      */
     public static double ahav(final double theta) {
         return 2.0D * Math.asin(Math.sqrt(theta));
     }
 
     /**
-     * Computes the exponential of given number using the number two as a base.
+     * Computes the n-th power of two.
      *
-     * @param x The number
-     * @return The exponential of the number
+     * @param n the power to which two should be raised
+     * @return two to that power
+     * @see #log2(double)
      */
-    public static double exp2(final double x) {
-        return Math.pow(2.0D, x);
+    public static double exp2(final double n) {
+        return Math.pow(2.0D, n);
     }
 
     /**
-     * Computes the binary logarithm of a given number.
+     * Computes the binary logarithm of a number.
      *
-     * @param x The number.
-     * @return The binary logarithm of the number.
+     * @param x the number
+     * @return the binary logarithm of the number
+     * @see #exp2(double)
      */
     public static double log2(final double x) {
         return Math.log(x) * INV_LOG2;
     }
 
     /**
-     * Computes the square of a given number.
+     * Computes the square of a number.
      *
-     * @param x The number.
-     * @return The square.
+     * @param x the number
+     * @return that number raised to the power of two
      */
     public static double pow2(final double x) {
         return Math.pow(x, 2D);
     }
 
     /**
-     * Determines if two given numbers of type {@code double} are <i>almost</i> equal to each other.
-     * <p>
-     * This method is not transitive, meaning that if {@code almostEquals(a, b)} and {@code almostEquals(b, c)}, then {@code almostEquals(a, c)} is not necessarily true.
+     * Determines of two numbers are equal or at least almost equal to each other.
      *
-     * @param a The first number.
-     * @param b The second number.
-     * @return {@code true} of the numbers are almost equal; {@code false} otherwise.
-     * @apiNote In contrast to other similar methods, {@code NaN == NaN} and {@code -0 == 0}.
+     * @param a the first number
+     * @param b the second number
+     * @return {@code true} if {@code a == b} or {@code a ≈ b}; {@code false} otherwise.
+     * @apiNote this method is not commutative nor transitive (i.e., if {@code almostEquals(a, b)} and {@code almostEquals(a, c)}, then it is not necessarily the case that {@code almostEquals(b, a)}, {@code almostEquals(c, a)} and {@code almostEquals(a, c)})
+     * @implNote in contrast to various other implementations of this method, it is always the case that {@code almostEquals(±0, ∓0)} and {@code almostEquals(NaN, NaN)}
+     * @see Math#ulp(double)
      */
     public static boolean almostEquals(final double a, final double b) {
         final double eps = Math.max(Math.ulp(a), Math.ulp(b));

@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dimitrismantas.torch.core.graph.shortestpaths;
+package com.dimitrismantas.torch.serialization;
 
-public enum OptimizationMode {
-    MINIMUM_DISTANCE, MINIMUM_TRAVEL_TIME
+import com.dimitrismantas.torch.serialization.graph.SerializableGraph;
+
+public final class Main {
+    public static void main(String[] args) {
+        new SerializableGraph("utils/resources/grc/grc_graph_vertices_8500875.txt", "utils/resources/grc/grc_graph_edges_8809699.txt").serialize("src/main/resources/grc/grc_graph_8500875_8809699.dat");
+    }
 }

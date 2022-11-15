@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.astar.alt;
+package com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.astar;
 
 import com.dimitrismantas.torch.core.graph.Vertex;
 import com.dimitrismantas.torch.core.graph.shortestpaths.GenericLabelSettingShortestPathAlgorithm;
 import com.dimitrismantas.torch.core.graph.shortestpaths.utils.heuristics.AbstractHeuristic;
-import com.dimitrismantas.torch.core.utils.serialization.readers.ALTDataReader;
 
-public final class ALTHeuristic extends AbstractHeuristic {
-    private ALTDataReader reader;
+public final class StandardAStarTravelTimeHeuristic extends AbstractHeuristic {
+    private static final double INV_AVG_SPEED = 0.036;
+    private final StandardAStarDistanceHeuristic distanceHeuristic;
 
-    public ALTHeuristic(final GenericLabelSettingShortestPathAlgorithm genericAlgorithm) {
-        super(genericAlgorithm);
+    public StandardAStarTravelTimeHeuristic(final GenericLabelSettingShortestPathAlgorithm genericAlgorithm) {
+        this.distanceHeuristic = new StandardAStarDistanceHeuristic(genericAlgorithm);
     }
 
+    @Override
     public int estimateCostToReferenceVertex(final Vertex v) {
         if (v.numInitialized() != this.genericAlgorithm.numExecutions) {
-            v.mutateEstimatedCostToTarget(this.reader.getEstimatedCost(v, this.refV));
+            v.mutateEstimatedCostToTarget((int) (this.distanceHeuristic.estimateCostToReferenceVertex(v) * INV_AVG_SPEED));
         }
         return v.estimatedCostToTarget();
     }
 
-    public void setReader(final ALTDataReader reader) {
-        this.reader = reader;
+    @Override
+    public void setReferenceVertex(Vertex refV) {
+        super.setReferenceVertex(refV);
+        this.distanceHeuristic.setReferenceVertex(refV);
     }
 }

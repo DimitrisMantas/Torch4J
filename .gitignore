@@ -41,7 +41,9 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+/docs/
 /src/main/resources/
 /utils/graph/source/
 /utils/resources/grc/
 /utils/serialization/graph/com/
+!/.idea/vcs.xml

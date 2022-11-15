@@ -13,8 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dimitrismantas.torch.core.graph.shortestpaths;
+package com.dimitrismantas.torch.core.graph.shortestpaths.utils.exceptions;
 
-public enum OptimizationMode {
-    MINIMUM_DISTANCE, MINIMUM_TRAVEL_TIME
+/**
+ * An exception thrown in case the target vertex is unreachable from the source.
+ *
+ * @author Dimitris Mantas
+ * @version 1.0.0
+ * @see EqualPathEndpointsException
+ * @since 1.0.0
+ */
+public final class UnreachablePathTargetException extends RuntimeException {
+    public UnreachablePathTargetException(final String message) {
+        super(message);
+    }
 }
