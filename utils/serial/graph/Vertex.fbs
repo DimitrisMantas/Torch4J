@@ -1,0 +1,21 @@
+// This statement is equivalent to the one used in C++.
+include "Edge.fbs";
+
+// This is the eventual destination package of the compiled schema.
+namespace com.dimitrismantas.torch.core.graph;
+
+// A table is roughly equivalent to a struct in that it contains fields of various types with both default and optional
+// values.
+table Vertex {
+  lbl:int;
+  lat:float;
+  lon:float;
+  num_initialized:short = 0;
+  actual_cost_from_source:int = -1;
+  estimated_cost_to_target:int = -1;
+  predecessor_label:int = -1;
+  outgoing_edges:[Edge];
+}
+
+// This is the name of the top-level table in the schema.
+root_type Vertex;

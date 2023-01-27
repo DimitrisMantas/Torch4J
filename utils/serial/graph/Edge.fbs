@@ -1,0 +1,13 @@
+// This is the eventual destination package of the compiled schema.
+namespace com.dimitrismantas.torch.core.graph;
+
+// A table is roughly equivalent to a struct in that it contains fields of various types with both default and optional
+// values.
+table Edge {
+  end_vertex_label:int;
+  length:short;
+  travel_time:short;
+}
+
+// This is the name of the top-level table in the schema.
+root_type Edge;
